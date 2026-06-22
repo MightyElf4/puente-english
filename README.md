@@ -68,7 +68,7 @@ Above all, Puente is designed so that learning does not feel like a chore. Every
 ## Tech Stack
 
 - **Frontend:** Vanilla HTML, CSS, and JavaScript — no frameworks, no build tools required
-- **Auth + Database:** [Firebase](https://firebase.google.com/) — Authentication and Firestore (free tier)
+- **Auth + Database:** [Supabase](https://supabase.com/) — Authentication and PostgreSQL (free tier)
 - **Hosting:** GitHub Pages
 
 ---
@@ -81,34 +81,30 @@ Above all, Puente is designed so that learning does not feel like a chore. Every
    cd puente-english
    ```
 
-2. Set up Firebase (see [Firebase Setup](#firebase-setup) below).
+2. Set up Supabase (see [Supabase Setup](#supabase-setup) below).
 
 3. Open `index.html` in your browser. No build step or local server required for most features.
 
 ---
 
-## Firebase Setup
+## Supabase Setup
 
-Puente uses Firebase for user authentication and data storage. To run your own instance:
+Puente uses Supabase for user authentication and data storage. To run your own instance:
 
-1. Go to [firebase.google.com](https://firebase.google.com) and create a free project
-2. In the Firebase console, enable **Authentication** → Sign-in method → **Email/Password**
-3. Enable **Firestore Database** → Create database → Start in test mode
-4. Go to **Project Settings** → Your apps → Add a web app → copy the config object
-5. Paste your config into `js/firebase-config.js`:
+1. Go to [supabase.com](https://supabase.com) and create a free project
+2. In the Supabase dashboard, go to **Authentication → Providers** and confirm Email is enabled
+3. Go to **Project Settings → API** and copy your **Project URL** and **anon/public key**
+4. Paste them into `js/supabase-config.js`:
 
 ```javascript
-const firebaseConfig = {
-  apiKey: "your-api-key",
-  authDomain: "your-project.firebaseapp.com",
-  projectId: "your-project-id",
-  storageBucket: "your-project.appspot.com",
-  messagingSenderId: "your-sender-id",
-  appId: "your-app-id"
-};
+const SUPABASE_URL  = 'https://your-project.supabase.co';
+const SUPABASE_ANON = 'your-anon-key';
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 ```
 
-> Firebase web API keys are safe to include in client-side code. Access is controlled by Firestore Security Rules, not by keeping the config secret.
+5. Run the SQL schema in **SQL Editor → New query** (see `docs/SCHEMA.sql` once created)
+
+> Supabase anon keys are safe to include in client-side code. Access is controlled by Row Level Security (RLS) policies on the database, not by keeping the key secret.
 
 ---
 

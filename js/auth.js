@@ -13,6 +13,17 @@ function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+function friendlyAuthError(message) {
+  if (!message) return 'Ocurrió un error inesperado. Por favor intenta de nuevo.';
+  const m = message.toLowerCase();
+  if (m.includes('already registered'))       return 'Ya existe una cuenta con ese correo electrónico.';
+  if (m.includes('invalid login credentials')) return 'Correo o contraseña incorrectos. Intenta de nuevo.';
+  if (m.includes('email not confirmed'))       return 'Confirma tu correo electrónico antes de iniciar sesión.';
+  if (m.includes('password'))                  return 'La contraseña debe tener al menos 8 caracteres.';
+  if (m.includes('network'))                   return 'Error de conexión. Revisa tu internet e intenta de nuevo.';
+  return 'Ocurrió un error inesperado. Por favor intenta de nuevo.';
+}
+
 // ── Role picker (signup page) ──
 document.querySelectorAll('.role-option').forEach(option => {
   option.addEventListener('click', () => {
@@ -58,26 +69,23 @@ if (signupForm) {
     btn.textContent = 'Creando cuenta...';
     btn.disabled = true;
 
-    // TODO: Firebase signup
-    // Replace this block when Firebase is configured:
-    // try {
-    //   const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    //   await updateProfile(userCredential.user, { displayName: name });
-    //   await setDoc(doc(db, 'users', userCredential.user.uid), {
-    //     name, email, role, createdAt: serverTimestamp()
-    //   });
-    //   window.location.href = role === 'teacher' ? 'teacher/dashboard.html' : 'dashboard.html';
-    // } catch (err) {
-    //   showError(errorEl, friendlyAuthError(err.code));
-    //   btn.textContent = 'Crear cuenta';
-    //   btn.disabled = false;
-    // }
+    const { error } = await db.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { name, role }
+      }
+    });
 
-    // Placeholder until Firebase is wired up:
-    console.log('Signup ready — Firebase not yet configured.', { name, email, role });
-    btn.textContent = 'Crear cuenta';
-    btn.disabled = false;
-    showError(errorEl, 'Firebase aún no está configurado. Próximamente.');
+    if (error) {
+      showError(errorEl, friendlyAuthError(error.message));
+      btn.textContent = 'Crear cuenta';
+      btn.disabled = false;
+      return;
+    }
+
+    // Redirect based on role
+    window.location.href = role === 'teacher' ? 'teacher/dashboard.html' : 'dashboard.html';
   });
 }
 
@@ -106,36 +114,17 @@ if (loginForm) {
     btn.textContent = 'Iniciando sesión...';
     btn.disabled = true;
 
-    // TODO: Firebase login
-    // Replace this block when Firebase is configured:
-    // try {
-    //   await signInWithEmailAndPassword(auth, email, password);
-    //   window.location.href = 'dashboard.html';
-    // } catch (err) {
-    //   showError(errorEl, friendlyAuthError(err.code));
-    //   btn.textContent = 'Iniciar sesión';
-    //   btn.disabled = false;
-    // }
+    const { data, error } = await db.auth.signInWithPassword({ email, password });
 
-    // Placeholder until Firebase is wired up:
-    console.log('Login ready — Firebase not yet configured.', { email });
-    btn.textContent = 'Iniciar sesión';
-    btn.disabled = false;
-    showError(errorEl, 'Firebase aún no está configurado. Próximamente.');
+    if (error) {
+      showError(errorEl, friendlyAuthError(error.message));
+      btn.textContent = 'Iniciar sesión';
+      btn.disabled = false;
+      return;
+    }
+
+    // Redirect based on stored role
+    const role = data.user.user_metadata?.role;
+    window.location.href = role === 'teacher' ? 'teacher/dashboard.html' : 'dashboard.html';
   });
-}
-
-// ── Friendly Firebase error messages (Spanish) ──
-// Used once Firebase is active
-function friendlyAuthError(code) {
-  const messages = {
-    'auth/email-already-in-use':   'Ya existe una cuenta con ese correo electrónico.',
-    'auth/invalid-email':          'El correo electrónico no es válido.',
-    'auth/weak-password':          'La contraseña es muy débil. Usa al menos 8 caracteres.',
-    'auth/user-not-found':         'No encontramos una cuenta con ese correo.',
-    'auth/wrong-password':         'Contraseña incorrecta. Intenta de nuevo.',
-    'auth/too-many-requests':      'Demasiados intentos. Espera un momento e intenta de nuevo.',
-    'auth/network-request-failed': 'Error de conexión. Revisa tu internet e intenta de nuevo.',
-  };
-  return messages[code] || 'Ocurrió un error inesperado. Por favor intenta de nuevo.';
 }
