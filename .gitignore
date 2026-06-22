@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+
+# Firebase
+.firebase/
+firebase-debug.log
+firestore-debug.log
+
+# Environment / secrets
+.env
+
+# Logs
+*.log
+
+# Editor
+.vscode/
+.idea/
