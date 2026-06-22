@@ -84,8 +84,8 @@ if (signupForm) {
       return;
     }
 
-    // Redirect based on role
-    window.location.href = role === 'teacher' ? 'teacher/dashboard.html' : 'dashboard.html';
+    // Redirect based on role — students go to placement test first
+    window.location.href = role === 'teacher' ? 'teacher/dashboard.html' : 'placement.html';
   });
 }
 

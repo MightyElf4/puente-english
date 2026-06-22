@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Evaluación de nivel de inglés — Puente">
+  <title>Evaluación de nivel — Puente</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+
+  <script>
+    if (localStorage.getItem('theme') === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  </script>
+</head>
+
+<body class="placement-page">
+
+  <!-- Loading -->
+  <div id="screen-loading" class="placement-loading">Cargando...</div>
+
+  <!-- Intro -->
+  <div id="screen-intro" hidden>
+    <div class="placement-card">
+      <a href="index.html" class="placement-logo">Puente</a>
+      <h1>Evaluación de nivel</h1>
+      <p class="placement-intro-text">Antes de empezar, queremos encontrar el nivel que mejor se adapte a ti. No es un examen — es una forma de asegurarnos de que el contenido sea útil y apropiado desde el primer día.</p>
+      <p class="placement-intro-text">Haz tu mejor esfuerzo. No hay presión — solo un punto de partida.</p>
+      <div class="placement-meta">
+        <span>📝 30 preguntas</span>
+        <span>⏱ Aprox. 10 minutos</span>
+      </div>
+      <button id="start-btn" class="btn btn-primary" style="width: 100%;">Comenzar evaluación</button>
+    </div>
+  </div>
+
+  <!-- Test -->
+  <div id="screen-test" hidden>
+    <div class="placement-progress">
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+      <div class="question-counter" id="question-counter">Pregunta 1 de 30</div>
+    </div>
+    <div class="placement-card">
+      <blockquote class="passage" id="passage" hidden></blockquote>
+      <p class="question-text" id="question-text"></p>
+      <div class="options-list" id="options-list"></div>
+      <button id="next-btn" class="btn btn-primary" style="width: 100%;" disabled>Siguiente</button>
+    </div>
+  </div>
+
+  <!-- Result -->
+  <div id="screen-result" hidden>
+    <div class="placement-card" style="text-align: center;">
+      <a href="index.html" class="placement-logo">Puente</a>
+      <div class="level-badge" id="level-badge"></div>
+      <h1 class="result-title" id="result-title"></h1>
+      <p class="result-desc" id="result-desc"></p>
+      <button id="dashboard-btn" class="btn btn-primary" style="width: 100%;">Ir a mi panel →</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/placement.js"></script>
+</body>
+
+</html>
