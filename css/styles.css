@@ -748,6 +748,11 @@ body {
 
 /* ── Mobile ── */
 @media (max-width: 600px) {
+  .placement-card {
+    padding: 1.75rem 1.25rem;
+    border-radius: 14px;
+  }
+
   header {
     padding: 0 16px;
     height: 56px;

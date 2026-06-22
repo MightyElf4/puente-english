@@ -374,11 +374,13 @@ function renderQuestion() {
 
   const list = document.getElementById('options-list');
   list.innerHTML = '';
-  q.options.forEach(opt => {
+  q.options.forEach((opt, idx) => {
     const btn = document.createElement('button');
-    btn.className   = 'option-btn';
-    btn.textContent = opt;
-    btn.addEventListener('click', () => selectOption(opt));
+    btn.className        = 'option-btn';
+    btn.textContent      = opt;
+    btn.dataset.index    = idx;
+    btn.setAttribute('aria-pressed', 'false');
+    btn.addEventListener('click', () => selectOption(opt, idx));
     list.appendChild(btn);
   });
 
@@ -387,10 +389,16 @@ function renderQuestion() {
   nextBtn.textContent = currentIndex === 29 ? 'Ver mi resultado' : 'Siguiente';
 }
 
-function selectOption(text) {
-  document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
-  const btn = [...document.querySelectorAll('.option-btn')].find(b => b.textContent === text);
-  if (btn) btn.classList.add('selected');
+function selectOption(text, idx) {
+  document.querySelectorAll('.option-btn').forEach(b => {
+    b.classList.remove('selected');
+    b.setAttribute('aria-pressed', 'false');
+  });
+  const btn = document.querySelector(`.option-btn[data-index="${idx}"]`);
+  if (btn) {
+    btn.classList.add('selected');
+    btn.setAttribute('aria-pressed', 'true');
+  }
   answers[currentIndex] = text;
   document.getElementById('next-btn').disabled = false;
 }
@@ -407,7 +415,11 @@ document.getElementById('next-btn').addEventListener('click', () => {
 // ── Score + save ──────────────────────────────────────────────────────────────
 
 async function submitTest() {
-  const bScore = questions.slice(0, 10).filter((q, i) => answers[i]      === q.answer).length;
+  const nextBtn = document.getElementById('next-btn');
+  nextBtn.textContent = 'Calculando tu nivel...';
+  nextBtn.disabled    = true;
+
+  const bScore = questions.slice(0, 10).filter((q, i) => answers[i]       === q.answer).length;
   const iScore = questions.slice(10, 20).filter((q, i) => answers[i + 10] === q.answer).length;
 
   let level;
@@ -415,7 +427,17 @@ async function submitTest() {
   else if (iScore < 6) level = 'intermediate';
   else                 level = 'advanced';
 
-  await db.from('profiles').update({ level }).eq('id', currentUserId);
+  const { error } = await db.from('profiles').update({ level }).eq('id', currentUserId);
+
+  if (error) {
+    nextBtn.textContent = 'Ver mi resultado';
+    nextBtn.disabled    = false;
+    const errEl = document.createElement('p');
+    errEl.style.cssText = 'color: var(--terracotta); font-size: 0.88rem; margin-top: 0.75rem; text-align: center;';
+    errEl.textContent   = 'Error de conexión. Revisa tu internet e intenta de nuevo.';
+    nextBtn.insertAdjacentElement('afterend', errEl);
+    return;
+  }
 
   document.getElementById('progress-fill').style.width = '100%';
   screenTest.hidden = true;
