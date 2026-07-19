@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Panel del profesor en Puente — administra tus clases y estudiantes.">
+  <title>Panel del profesor — Puente</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌉</text></svg>">
+
+  <script>
+    if (localStorage.getItem('theme') === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  </script>
+</head>
+
+<body class="dashboard-page">
+
+  <header>
+    <a href="dashboard.html" class="logo">Puente</a>
+    <div class="header-nav">
+      <button id="theme-toggle" aria-label="Cambiar tema">☾</button>
+      <button id="signout-btn" class="btn btn-ghost">Cerrar sesión</button>
+    </div>
+  </header>
+
+  <main hidden id="dashboard-main">
+
+    <div class="dashboard-welcome">
+      <h1 id="welcome-title">Hola</h1>
+    </div>
+    <p class="dashboard-subtitle">Administra tus clases y sigue el progreso de tus estudiantes.</p>
+
+    <section class="dashboard-section">
+      <h2>Crear una clase</h2>
+      <form id="create-form" class="inline-form" novalidate>
+        <input type="text" id="class-name" placeholder="Nombre de la clase (ej. Contabilidad 11)" maxlength="60">
+        <select id="class-level" aria-label="Nivel de la clase">
+          <option value="beginner">Principiante</option>
+          <option value="intermediate">Intermedio</option>
+          <option value="advanced">Avanzado</option>
+        </select>
+        <button type="submit" class="btn btn-primary">Crear clase</button>
+      </form>
+      <div id="create-feedback" class="form-feedback" role="alert"></div>
+    </section>
+
+    <section class="dashboard-section">
+      <h2>Mis clases</h2>
+      <div id="class-list" class="class-list"></div>
+      <p id="classes-empty" class="empty-state" hidden>
+        Todavía no tienes clases. Crea una arriba y comparte el código con tus estudiantes.
+      </p>
+    </section>
+
+  </main>
+
+  <div id="dashboard-loading" class="placement-loading">Cargando tu panel...</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-config.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/teacher-dashboard.js"></script>
+</body>
+
+</html>
