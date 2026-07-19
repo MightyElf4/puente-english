@@ -52,6 +52,11 @@
   box-sizing: border-box;
 }
 
+/* Keep the hidden attribute working on elements with their own display rule */
+[hidden] {
+  display: none !important;
+}
+
 /* ── Base ── */
 body {
   font-family: 'Nunito', sans-serif;
@@ -746,8 +751,269 @@ body {
   margin-bottom: 2rem;
 }
 
+/* ── Dashboard ──────────────────────────────────────── */
+.dashboard-page main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 96px 32px 64px;
+}
+
+.dashboard-welcome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.dashboard-welcome h1 {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+}
+
+.dashboard-welcome .level-badge {
+  margin-bottom: 0;
+}
+
+.dashboard-subtitle {
+  color: var(--text-secondary);
+  margin-bottom: 40px;
+}
+
+.dashboard-section {
+  margin-bottom: 48px;
+}
+
+.dashboard-section h2 {
+  font-size: 1.25rem;
+  margin-bottom: 16px;
+}
+
+/* Activity cards */
+.activity-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.activity-card {
+  display: block;
+  background-color: var(--bg-card);
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  padding: 28px 24px;
+  color: var(--text);
+  text-decoration: none;
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s, background-color 0.3s ease;
+}
+
+.activity-card:hover {
+  text-decoration: none;
+  border-color: var(--gold);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px var(--shadow-md);
+}
+
+.activity-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+.activity-card p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.activity-card.coming-soon {
+  opacity: 0.65;
+  cursor: default;
+}
+
+.activity-card.coming-soon:hover {
+  border-color: var(--border);
+  transform: none;
+  box-shadow: none;
+}
+
+.coming-soon-tag {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  padding: 2px 10px;
+  margin-top: 12px;
+}
+
+/* Class list */
+.class-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.class-item {
+  background-color: var(--bg-card);
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 22px;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.class-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.class-item h3 {
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+.class-item-meta {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 2px 0 0;
+}
+
+.class-code-chip {
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--terracotta);
+  background-color: var(--bg);
+  border: 2px dashed var(--border);
+  border-radius: 8px;
+  padding: 4px 12px;
+  white-space: nowrap;
+}
+
+/* Roster (teacher view) */
+.class-item details {
+  margin-top: 12px;
+}
+
+.class-item summary {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--blue);
+  cursor: pointer;
+}
+
+.roster-list {
+  list-style: none;
+  margin-top: 10px;
+  border-top: 1px solid var(--border);
+}
+
+.roster-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 4px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.95rem;
+}
+
+.roster-level {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+/* Inline forms (join class, create class) */
+.inline-form {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.inline-form input,
+.inline-form select {
+  flex: 1;
+  min-width: 160px;
+  padding: 11px 14px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 1rem;
+  background-color: var(--bg-input);
+  color: var(--text);
+  transition: border-color 0.2s, background-color 0.3s ease;
+}
+
+.inline-form input:focus,
+.inline-form select:focus {
+  outline: none;
+  border-color: var(--terracotta);
+}
+
+.form-feedback {
+  display: none;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  margin-top: 12px;
+}
+
+.form-feedback.visible {
+  display: block;
+}
+
+.form-feedback.error {
+  background-color: #fde8e8;
+  color: #a33;
+  border: 1px solid #f5c6c6;
+}
+
+[data-theme="dark"] .form-feedback.error {
+  background-color: #3d1a1a;
+  color: #f5a0a0;
+  border-color: #6b2a2a;
+}
+
+.form-feedback.success {
+  background-color: #e6f4ec;
+  color: #2a6b47;
+  border: 1px solid #bfe3cf;
+}
+
+[data-theme="dark"] .form-feedback.success {
+  background-color: #1a3d28;
+  color: #8fe0b0;
+  border-color: #2a6b47;
+}
+
+/* Empty state */
+.empty-state {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  background-color: var(--bg-card);
+  border: 2px dashed var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  text-align: center;
+  margin: 0;
+}
+
 /* ── Mobile ── */
 @media (max-width: 600px) {
+  .dashboard-page main {
+    padding: 80px 20px 48px;
+  }
+
+
   .placement-card {
     padding: 1.75rem 1.25rem;
     border-radius: 14px;
