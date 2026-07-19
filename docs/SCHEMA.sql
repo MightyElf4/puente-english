@@ -18,10 +18,12 @@ CREATE TABLE profiles (
 
 -- Auto-insert a profile whenever a new auth user signs up.
 -- Pulls name and role from the metadata passed in signUp().
-CREATE OR REPLACE FUNCTION handle_new_user()
+-- Must schema-qualify and pin search_path: the auth service connection
+-- doesn't have "public" in its search_path, so unqualified names fail.
+CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-  INSERT INTO profiles (id, name, role)
+  INSERT INTO public.profiles (id, name, role)
   VALUES (
     NEW.id,
     NEW.raw_user_meta_data->>'name',
@@ -29,7 +31,7 @@ BEGIN
   );
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users

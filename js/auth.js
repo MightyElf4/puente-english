@@ -69,7 +69,7 @@ if (signupForm) {
     btn.textContent = 'Creando cuenta...';
     btn.disabled = true;
 
-    const { error } = await db.auth.signUp({
+    const { data, error } = await db.auth.signUp({
       email,
       password,
       options: {
@@ -81,6 +81,15 @@ if (signupForm) {
       showError(errorEl, friendlyAuthError(error.message));
       btn.textContent = 'Crear cuenta';
       btn.disabled = false;
+      return;
+    }
+
+    // No session means email confirmation is required before logging in.
+    if (!data.session) {
+      signupForm.hidden = true;
+      const msgEl = document.getElementById('signup-success');
+      msgEl.textContent = `Te enviamos un correo a ${email}. Haz clic en el enlace para confirmar tu cuenta y luego inicia sesión.`;
+      msgEl.classList.add('visible');
       return;
     }
 
