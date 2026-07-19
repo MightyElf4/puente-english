@@ -96,11 +96,10 @@ function setupJoinForm(userId) {
     const btn = form.querySelector('button[type="submit"]');
     btn.disabled = true;
 
-    const { data: cls, error: findError } = await db
-      .from('classes')
-      .select('id, name')
-      .eq('class_code', code)
-      .maybeSingle();
+    // RLS hides classes the student hasn't joined, so the lookup goes
+    // through a function that only reveals a class on exact code match.
+    const { data: matches, error: findError } = await db
+      .rpc('lookup_class_by_code', { p_code: code });
 
     if (findError) {
       showFeedback(feedbackEl, 'error', 'Error de conexión. Revisa tu internet e intenta de nuevo.');
@@ -108,6 +107,7 @@ function setupJoinForm(userId) {
       return;
     }
 
+    const cls = matches && matches[0];
     if (!cls) {
       showFeedback(feedbackEl, 'error', 'No encontramos una clase con ese código. Revísalo e intenta de nuevo.');
       btn.disabled = false;
